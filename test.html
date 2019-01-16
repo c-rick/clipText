@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .text-box{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 20px 30%;
+            box-sizing: border-box;
+        }
+        .text-box div{
+            border: 1px solid gray;
+            width: 120px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <section class="text-box">
+        <div class="test">[原来]测试单行省略</div>
+        <div class="test1">测试单行省略</div>
+    </section>
+    <section class="text-box">
+        <div class="test2">[原来]测试多行省略测试多行省略测试多行省略</div>
+        <div class="test3">测试多行省略测试多行省略测试多行省略</div>
+    </section>
+</body>
+    <script src="./lib/clip-text.js"></script>
+    <script>
+        clipText(['.text2', '.test1'])
+        clipText('.test3', {line:2})
+    </script>
+</html>
