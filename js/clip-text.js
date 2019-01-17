@@ -9,8 +9,8 @@ function clipText(selectors, opts) {
             animation: false,
             line: false,
             showTitle: false,
-            eclipText: '...',
-            eclipClick: function(){}
+            clipText: '...',
+            clipClick: function(){}
         },
         init(selectors, opts) {
             if(!selectors) {
@@ -34,7 +34,37 @@ function clipText(selectors, opts) {
             })
         },
         clip($el){
-            console.log('otherclip')
+            const elCss = window.getComputedStyle($el);
+            const fontSize = parseInt(elCss.fontSize);
+            const width = parseInt(elCss.width);
+            const lineNum = parseInt(width/fontSize);
+            let originText = $el.innerText;
+            let newText = '';
+            let nextNum = 0;
+            for( let i = 0; i<this.defalutOpt.line;i++) {
+                let lineText = originText.slice(0, lineNum);
+                let otherText = lineText.match(/[^\u4e00-\u9fa5]/g);
+                if (otherText) {
+                    nextNum = nextNum + parseInt(otherText.length/2);
+                    newText += lineText + originText.substr(lineNum, nextNum);
+                    originText = originText.slice(lineNum + nextNum);
+                } else {
+                    newText += lineText;
+                    originText = originText.slice(lineNum);
+                }
+            }
+            newText = this.replaceClip(newText)
+            $el.innerText = newText;
+            console.log(fontSize, width, lineNum, originText)
+        },
+        replaceClip(str) {
+            const clipText = this.defalutOpt.clipText;
+            const otherText = clipText.match(/[^\u4e00-\u9fa5]/g);
+            const clipLen = otherText ? Math.floor(otherText.length/2) + (clipText.length - otherText.length) : clipText.length;
+            console.log(clipLen)
+            
+            $el.innerHTML += this.defalutOpt.clipText
+            return str.slice(0, -clipLen);
         },
         lineOneClip($el) {
             this.setStyle($el, [
@@ -53,6 +83,7 @@ function clipText(selectors, opts) {
         }
     }
     main.init(selectors, opts);
+    return main;
 }
 // tool
 function isString(str) {
@@ -65,7 +96,7 @@ function $(select) {
     return document.querySelectorAll(select);
 } 
 function setStyle() {
-    if(navigator.userAgent.indexOf("MSIE") > -1){
+    if(navigator.userAgent.indexOf('Trident') > -1 || navigator.userAgent.indexOf('MSIE') > -1 ){
         return ($el, arr) => {
             arr.forEach(i => {
                 let [key, val] = i.split(':');
