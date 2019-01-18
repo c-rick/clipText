@@ -22,17 +22,24 @@
 </head>
 <body>
     <section class="text-box">
+        1行
         <div class="test">[修改前]测试单行省略</div>
         <div class="test1">[修改后]测试单行省略</div>
     </section>
     <section class="text-box">
+        2行溢出
         <div class="test2">[修改前]测试多行省略测试多行省略测试多行省略</div>
         <div class="test3">[修改后]测试多行省略测试多行省略测试多行省略</div>
     </section>
-</body>
+    <section class="text-box">
+        2行不溢出
+        <div class="test2">[修改前]测试多行省略测试多</div>
+        <div class="test3">[修改后]测试多行省略测试多</div>
+    </section>
+</body> 
     <script src="./lib/clip-text.js"></script>
     <script>
-        clipText(['.text2', '.test1'])
-        clipText('.test3', {line:2, clipText: '<a>[更多]</a>'})
+        clipText(['.test1'])
+        clipText('.test3', {line:2, clipText: '[更多]'})
     </script>
 </html>

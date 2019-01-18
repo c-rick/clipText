@@ -18,7 +18,7 @@ function clipText(selectors, opts) {
             }
             if(!(opts && opts.line >= 2)) {
                 this.clip = this.lineOneClip;
-            } else if(navigator.userAgent.indexOf("Chrome") > -1) {
+            } else if(navigator.userAgent.indexOf("Chrome") > -1 && !opts.clipText) {
                 this.clip = this.chromeClip;
             }
             this.setStyle = setStyle()
@@ -38,14 +38,20 @@ function clipText(selectors, opts) {
             const fontSize = parseInt(elCss.fontSize);
             const width = parseInt(elCss.width);
             const lineNum = parseInt(width/fontSize);
+            const line = this.defalutOpt.line
             let originText = $el.innerText;
             let newText = '';
             let nextNum = 0;
-            for( let i = 0; i<this.defalutOpt.line;i++) {
+            
+            // 假如不溢出
+            if (originText.length <= lineNum * line ) return;
+
+            for( let i = 0; i < line; i++) {
                 let lineText = originText.slice(0, lineNum);
                 let otherText = lineText.match(/[^\u4e00-\u9fa5]/g);
                 if (otherText) {
-                    nextNum = nextNum + parseInt(otherText.length/2);
+                    const otherLen = parseInt(otherText.length/2)
+                    nextNum = nextNum + otherLen;
                     newText += lineText + originText.substr(lineNum, nextNum);
                     originText = originText.slice(lineNum + nextNum);
                 } else {
@@ -53,17 +59,17 @@ function clipText(selectors, opts) {
                     originText = originText.slice(lineNum);
                 }
             }
+
             newText = this.replaceClip(newText)
             $el.innerText = newText;
-            console.log(fontSize, width, lineNum, originText)
+            var clipNode = document.createElement('a');
+            clipNode.innerText = this.defalutOpt.clipText;
+            $el.appendChild(clipNode)
         },
         replaceClip(str) {
             const clipText = this.defalutOpt.clipText;
             const otherText = clipText.match(/[^\u4e00-\u9fa5]/g);
             const clipLen = otherText ? Math.floor(otherText.length/2) + (clipText.length - otherText.length) : clipText.length;
-            console.log(clipLen)
-            
-            $el.innerHTML += this.defalutOpt.clipText
             return str.slice(0, -clipLen);
         },
         lineOneClip($el) {
