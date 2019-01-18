@@ -42,16 +42,14 @@ function clipText(selectors, opts) {
             let originText = $el.innerText;
             let newText = '';
             let nextNum = 0;
-            
-            // 假如不溢出
-            if (originText.length <= lineNum * line ) return;
+            let otherLen = originText.length * 2;
 
             for( let i = 0; i < line; i++) {
                 let lineText = originText.slice(0, lineNum);
                 let otherText = lineText.match(/[^\u4e00-\u9fa5]/g);
                 if (otherText) {
-                    const otherLen = parseInt(otherText.length/2)
-                    nextNum = nextNum + otherLen;
+                    otherLen = otherLen - otherText.length;
+                    nextNum = nextNum + parseInt(otherText.length/2);
                     newText += lineText + originText.substr(lineNum, nextNum);
                     originText = originText.slice(lineNum + nextNum);
                 } else {
@@ -59,6 +57,8 @@ function clipText(selectors, opts) {
                     originText = originText.slice(lineNum);
                 }
             }
+            // if not overflow
+            if (parseInt(otherLen/2) <= lineNum * line ) return;
 
             newText = this.replaceClip(newText)
             $el.innerText = newText;
