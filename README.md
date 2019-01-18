@@ -1,0 +1,1 @@
+# smiple clipText to compatible IE ,chrome and other Browser
