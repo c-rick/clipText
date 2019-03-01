@@ -45,17 +45,15 @@
 			},
 			clip($el) {
 				const elCss = window.getComputedStyle($el);
-                var fontSize = Math.round(parseFloat(elCss.fontSize));
-				var width = Math.round(parseFloat(elCss.width));
-				var lineNum = Math.ceil(width / fontSize - 0.5);
 				const { line, clipText, clipClick } = this.defalutOpt;
+				let lineNum = Math.round(parseFloat(elCss.width) / parseFloat(elCss.fontSize) - 0.5);
 				let originText = $el.innerText;
 				let nextText = originText;
-				let finalLineNum = 0;
-				let otherLen = originText.length;
+                let finalLineNum = 0;
 				for (let i = 0; i < line; i++) {
 					let nextNum = this.countExamine(nextText, lineNum);
-					const checkText = originText.slice(finalLineNum, finalLineNum + nextNum);
+                    const checkText = originText.slice(finalLineNum, finalLineNum + nextNum);
+                    console.log(checkText)
 					const overNum = this.getOverLen(checkText, lineNum);
 					if (overNum) {
 						nextNum = nextNum - overNum;

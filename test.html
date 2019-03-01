@@ -10,48 +10,54 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 20px 30%;
+            padding: 0 30%;
             box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+        .text-box p{
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
         }
         .text-box div{
             border: 1px solid gray;
-            width: 120px;
+            width: 30%;
             box-sizing: border-box;
         }
     </style>
 </head>
 <body>
     <section class="text-box">
-        1行
+        <p>1行</p>
         <div class="test">[修改前]测试单行省略</div>
         <div class="test1">[修改后]测试单行省略</div>
     </section>
     <section class="text-box">
-        多行溢出
+        <p>多行溢出</p>
         <div class="test2">[修改前]测试多行省略测试多行省略测试多行省略</div>
         <div class="test3">[修改后]测试多行省略测试多行省略测试多行省略</div>
     </section>
     <section class="text-box">
-        多行不溢出
+        <p>多行不溢出</p>
         <div class="test2">[修改前]测试多行省略测试多行</div>
         <div class="test3">[修改后]测试多行省略测试多行</div>
     </section>
     <section class="text-box">
-        添加title
+        <p>添加title</p>
         <div class="test2">【修改前】测试多行省略测试多行多行省略</div>
         <div class="test4">【修改前】测试多行省略测试多行多行省略</div>
     </section>
     <section class="text-box">
-        自定义省略文字和点击事件
-        <div class="test2">[修改前]测试省略省略as好ssd你你好呀</div>
-        <div class="test5">[修改后]测试省略省略as好ssd你你好呀</div>
+        <p>自定义省略文字和点击事件</p>
+        <div class="test2">修改前测试省略省略as好ssd你你好呀</div>
+        <div class="test5">修改后测试省略省略as好ssd你你好呀</div>
     </section>
 </body> 
     <script src="./lib/clip-text.js"></script>
     <script>
-        clipText(['.test1'])
-        clipText('.test3', {line:2})
-        clipText('.test4', {line:2, showTitle: true})
+        // clipText(['.test1'])
+        // clipText('.test3', {line:2})
+        // clipText('.test4', {line:2, showTitle: true})
         clipText('.test5', {line:2, clipText: '[更多]', clipClick: function(e){
             console.log(e)
         }})
