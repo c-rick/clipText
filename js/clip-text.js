@@ -7,8 +7,8 @@
 (function (globel) {
 	if (window.NodeList && !NodeList.prototype.forEach) {
 		NodeList.prototype.forEach = Array.prototype.forEach;
-    }
-    const regExpClip = /[^\u4e00-\u9fa5\uff00-\uffffA-Z]/g
+	}
+	const regExpClip = /[^\u4e00-\u9fa5\uff00-\uffffA-Z]/g
 	function clipText(selectors, opts) {
 		const main = {
 			defalutOpt: {
@@ -27,33 +27,52 @@
 				} else if (navigator.userAgent.indexOf("Chrome") > -1 && !opts.clipText) {
 					this.clip = this.chromeClip;
 				}
-				this.setStyle = setStyle()
 				const selectEl = isArray(selectors) ? selectors : [selectors];
+				const cacheEl = []
 				this.defalutOpt = Object.assign(this.defalutOpt, opts)
+				this.setStyle = setStyle();
 				selectEl.forEach(i => {
 					const $i = i instanceof HTMLElement ? i : $(i);
 					if ($i && $i.forEach) {
 						$i.forEach(j => {
+							cacheEl.push({el: j, orText: j.innerText})
 							this.clip(j);
-							this.addTitle(j);
 						})
 					} else {
+						cacheEl.push({el: $i, orText: $i.innerText})
 						this.clip($i);
-						this.addTitle($i);
 					}
 				})
+				// init resize
+				const resizeCB = () => {
+					cacheEl.forEach(i => {
+						this.clip(i.el, this.defalutOpt, i.orText);
+					})
+				}
+				if (!window.onresize) {
+					window.onresize = resizeCB;
+				} else {
+					const prevCB = window.onresize;
+					window.onresize = () => {
+						prevCB.call(window);
+						resizeCB.call(this);
+					}
+				}
 			},
-			clip($el) {
+			clip($el, opt, orText) {
+				// for resize
+				this.defalutOpt = opt || this.defalutOpt;
+				const originText = orText || $el.innerText;
+
 				const elCss = window.getComputedStyle($el);
 				const { line, clipText, clipClick } = this.defalutOpt;
-				let lineNum = Math.round(parseFloat(elCss.width) / parseFloat(elCss.fontSize) - 0.5);
-				let originText = $el.innerText;
+				let lineNum = Math.round(parseFloat(elCss.width) / parseFloat(elCss.fontSize) - 0.65);
 				let nextText = originText;
-                let finalLineNum = 0;
+				let finalLineNum = 0;
+				// compute finalText
 				for (let i = 0; i < line; i++) {
 					let nextNum = this.countExamine(nextText, lineNum);
-                    const checkText = originText.slice(finalLineNum, finalLineNum + nextNum);
-                    console.log(checkText)
+					const checkText = originText.slice(finalLineNum, finalLineNum + nextNum);
 					const overNum = this.getOverLen(checkText, lineNum);
 					if (overNum) {
 						nextNum = nextNum - overNum;
@@ -63,7 +82,9 @@
 				}
 				let finalText = originText.slice(0, finalLineNum);
 				// if not overflow
-				if (finalText.length === originText.length) return;
+				if (finalText.length === originText.length) {
+					return $el.innerText = originText;
+				};
 				const [finalClipLen, clipLineNum] = this.countClip(finalText);
 				let clipLen = finalText.length - finalClipLen;
 				let overClipLen = this.getOverLen(finalText.slice(clipLen, finalText.length), clipLineNum);
@@ -79,7 +100,8 @@
 					clipNode.style = "cursor:pointer";
 				}
 				clipNode.innerText = clipText;
-				$el.appendChild(clipNode)
+				$el.appendChild(clipNode);
+				this.addTitle($el);
 			},
 			countClip(str) {
 				const clipText = this.defalutOpt.clipText;
