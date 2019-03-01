@@ -58,6 +58,10 @@
 						resizeCB.call(this);
 					}
 				}
+				window.attachEvent && window.attachEvent('onresize', function() {
+					prevCB.call(window);
+					resizeCB.call(_this);
+				})
 			},
 			clip($el, opt, orText) {
 				// for resize
@@ -65,7 +69,7 @@
 				const originText = orText || $el.innerText;
 
 				const elCss = window.getComputedStyle($el);
-				const { line, clipText, clipClick } = this.defalutOpt;
+				const { line, clipText, clipClick, showTitle } = this.defalutOpt;
 				let lineNum = Math.round(parseFloat(elCss.width) / parseFloat(elCss.fontSize) - 0.65);
 				let nextText = originText;
 				let finalLineNum = 0;
@@ -83,8 +87,12 @@
 				let finalText = originText.slice(0, finalLineNum);
 				// if not overflow
 				if (finalText.length === originText.length) {
+					$el.title = null
 					return $el.innerText = originText;
 				};
+				if (showTitle) {
+					$el.title = originText;
+				}
 				const [finalClipLen, clipLineNum] = this.countClip(finalText);
 				let clipLen = finalText.length - finalClipLen;
 				let overClipLen = this.getOverLen(finalText.slice(clipLen, finalText.length), clipLineNum);
@@ -101,7 +109,6 @@
 				}
 				clipNode.innerText = clipText;
 				$el.appendChild(clipNode);
-				this.addTitle($el);
 			},
 			countClip(str) {
 				const clipText = this.defalutOpt.clipText;
@@ -131,25 +138,27 @@
 				return finalLen;
 			},
 			lineOneClip($el) {
+				this.defalutOpt = opt || this.defalutOpt;
+				if (this.defalutOpt.showTitle) {
+					$el.title = $el.innerText;
+				}
 				this.setStyle($el, [
 					'overflow: hidden',
 					'text-overflow: ellipsis',
 					'white-space: nowrap'
 				])
 			},
-			chromeClip($el) {
+			chromeClip($el, opt) {
+				this.defalutOpt = opt || this.defalutOpt;
+				if (this.defalutOpt.showTitle) {
+					$el.title = $el.innerText;
+				}
 				this.setStyle($el, [
 					'overflow: hidden',
 					'display: -webkit-box',
 					'-webkit-box-orient: vertical',
 					`-webkit-line-clamp: ${this.defalutOpt.line}`
 				])
-			},
-			addTitle($el) {
-				const { showTitle } = this.defalutOpt;
-				if (showTitle) {
-					$el.title = $el.innerText;
-				}
 			}
 		}
 		main.init(selectors, opts);
