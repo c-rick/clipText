@@ -13,6 +13,7 @@
             padding: 0 30%;
             box-sizing: border-box;
             flex-wrap: wrap;
+            text-align: center;
         }
         .text-box p{
             width: 100%;
@@ -20,9 +21,11 @@
             padding: 10px 0;
         }
         .text-box div{
+            display: inline-block;
             border: 1px solid gray;
             width: 30%;
             box-sizing: border-box;
+            text-align: left;
         }
     </style>
 </head>
@@ -44,13 +47,18 @@
     </section>
     <section class="text-box">
         <p>添加title(test4)</p>
-        <div class="test2">【修改前】测试多行省略测试多行多行省略</div>
-        <div class="test4">【修改前】测试多行省略测试多行多行省略</div>
+        <div class="test2">[修改前]测试多行省略测试多行多行省略</div>
+        <div class="test4">[修改前]测试多行省略测试多行多行省略</div>
     </section>
     <section class="text-box">
         <p>自定义省略文字和点击事件(test5)</p>
         <div class="test2">修改前测试省略省略as好ssd你你好呀</div>
         <div class="test5">修改后测试省略省略as好ssd你你好呀</div>
+    </section>
+    <section class="text-box">
+        <p>添加动画(test6)</p>
+        <div class="test2">[修改前]测试多行省略测试多行多行省略</div>
+        <div class="test6">[修改前]测试多行省略测试多行多行省略</div>
     </section>
 </body> 
     <script src="./lib/clip-text.js"></script>
@@ -61,5 +69,6 @@
         clipText('.test5', {line:2, clipText: '[更多]', clipClick: function(e){
             console.log(e)
         }})
+        clipText('.test6', {line:2, animation: 100})
     </script>
 </html>

@@ -9,20 +9,21 @@ clipText('.test4', {line:2, showTitle: true})
 clipText('.test5', {line:2, clipText: '[更多]', clipClick: function(e){
     console.log(e)
 }})
+clipText('.test6', {line:2, animation: 100})
 ```
 
 ### options
 | name       |     type     |  required   |           defind        |
 | --------   |     -----:   |   -----:    |           :----:        |
-| line       |     int      |   false     |  clip line              |
+| line       |     number      |   false     |  clip line              |
 | showTitle  |   boolean    |   false     |  add title              |
 | clipText   |    string    |   false     |  customize more text    |
 | clipClick  |   function   |   false     | click function          |
-| animation  |   boolean    |   false     | show animation  //todo  | 
+| animation  |   boolean | number    |   false     | show animation          | 
 
 ### example
 ![alt](https://c-rick.github.io/images/clip-text.png)
-
+![alt](https://c-rick.github.io/images/clip-animation.gif)
 ### how to use in anguular2+?
 use clip-text with directive
 ```

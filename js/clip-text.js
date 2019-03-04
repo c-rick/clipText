@@ -1,13 +1,36 @@
 /** option
- * @param line 截取行数
- * @param showTitle 是否显示title
- * @param clipText 自定义截取文字
- * @param clipClick 截取文字点击事件
+ * @param line 截取行数 number | boolean
+ * @param showTitle 是否显示title boolean
+ * @param clipText 自定义截取文字 string
+ * @param clipClick 截取文字点击事件 function
+ * @param animation 字体动画 number | boolean ? 60 : 0;
  */
 (function (globel) {
-	if (window.NodeList && !NodeList.prototype.forEach) {
-		NodeList.prototype.forEach = Array.prototype.forEach;
-	}
+	// pollify
+	if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
+	if (!Date.now) Date.now = function() { return new Date().getTime(); };
+	(function() {
+			'use strict';
+			
+			var vendors = ['webkit', 'moz'];
+			for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
+					var vp = vendors[i];
+					window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
+					window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
+																		|| window[vp+'CancelRequestAnimationFrame']);
+			}
+			if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
+					|| !window.requestAnimationFrame || !window.cancelAnimationFrame) {
+					var lastTime = 0;
+					window.requestAnimationFrame = function(callback) {
+							var now = Date.now();
+							var nextTime = Math.max(lastTime + 16, now);
+							return setTimeout(function() { callback(lastTime = nextTime); },
+																nextTime - now);
+					};
+					window.cancelAnimationFrame = clearTimeout;
+			}
+	}());
 	const regExpClip = /[^\u4e00-\u9fa5\uff00-\uffffA-Z]/g
 	function clipText(selectors, opts) {
 		const main = {
@@ -33,14 +56,18 @@
 				this.setStyle = setStyle();
 				selectEl.forEach(i => {
 					const $i = i instanceof HTMLElement ? i : $(i);
+					let animation = this.defalutOpt.animation;
+					animation = animation ? typeof animation === 'number' ? animation : 60 : animation
 					if ($i && $i.forEach) {
 						$i.forEach(j => {
 							cacheEl.push({el: j, orText: j.innerText})
 							this.clip(j);
+							animation && this.setAnimation(j, animation);
 						})
 					} else {
 						cacheEl.push({el: $i, orText: $i.innerText})
 						this.clip($i);
+						animation && this.setAnimation($i, animation);
 					}
 				})
 				// init resize
@@ -69,7 +96,7 @@
 				const originText = orText || $el.innerText;
 
 				const elCss = window.getComputedStyle($el);
-				const { line, clipText, clipClick, showTitle } = this.defalutOpt;
+				const { line, clipText, clipClick, showTitle, animation } = this.defalutOpt;
 				let lineNum = Math.round(parseFloat(elCss.width) / parseFloat(elCss.fontSize) - 0.65);
 				let nextText = originText;
 				let finalLineNum = 0;
@@ -87,7 +114,7 @@
 				let finalText = originText.slice(0, finalLineNum);
 				// if not overflow
 				if (finalText.length === originText.length) {
-					$el.title = null
+					$el.title = null;
 					return $el.innerText = originText;
 				};
 				if (showTitle) {
@@ -114,7 +141,7 @@
 				const clipText = this.defalutOpt.clipText;
 				const otherText = clipText.match(regExpClip);
 				const clipLen = clipText.length;
-				const finalLen = otherText ? Math.floor(otherText.length / 2) + (clipLen - otherText.length) : clipLen;
+				const finalLen = otherText ? Math.ceil(otherText.length / 2) + (clipLen - otherText.length) : clipLen;
 				const reBackStr = str.split('').reverse().join("");
 				return [this.countExamine(reBackStr, finalLen), finalLen];
 			},
@@ -137,7 +164,7 @@
 				}
 				return finalLen;
 			},
-			lineOneClip($el) {
+			lineOneClip($el, opt) {
 				this.defalutOpt = opt || this.defalutOpt;
 				if (this.defalutOpt.showTitle) {
 					$el.title = $el.innerText;
@@ -159,6 +186,31 @@
 					'-webkit-box-orient: vertical',
 					`-webkit-line-clamp: ${this.defalutOpt.line}`
 				])
+			},
+			setAnimation($el, time = 60) {
+				let childrenText = null;
+				if ($el.children.length) {
+					const child = $el.children[0]
+					$el.removeChild(child)
+					childrenText = () => {
+						$el.appendChild(child);
+						this.setAnimation(child, time);
+					}
+				}
+				let originText = $el.innerText;
+				$el.innerText = '';
+				const textFn = () => {
+					setTimeout(() => {
+						$el.innerText = $el.innerText + originText.substr(0,1);
+						originText = originText.substr(1, originText.length);
+						if (originText.length) {
+							window.requestAnimationFrame(textFn)
+						} else {
+							childrenText && childrenText();
+						}
+					}, time)
+				}
+				window.requestAnimationFrame(textFn)
 			}
 		}
 		main.init(selectors, opts);
