@@ -100,22 +100,22 @@
 	})
 	var rel = React.createElement;
 	class ClipText extends React.Component {
-		constructor(prop) {
-			super(prop)
+		constructor(props) {
+			super(props)
 		}
 		componentDidMount(e) {
 			clipText(this.refs.clipRef, { line: 2 })
 		}
 		render() {
-			return rel('div', { className: 'text-box' }, '',
-				rel('p', null, 'react使用'),
-				rel('div', { className: 'test2' }, '[修改前]测试多行省略测试多行多行省略'),
-				rel('div', { ref: 'clipRef' }, '[修改前]测试多行省略测试多行多行省略')
-			)
+			return rel('div', { ref: 'clipRef' }, this.props.clipContent)
 		}
 	}
 	ReactDOM.render(
-		rel(ClipText),
+		rel('div', { className: 'text-box' }, '',
+			rel('p', null, 'react使用'),
+			rel('div', { className: 'test2' }, '[修改前]测试多行省略测试多行多行省略'),
+			rel(ClipText, { clipContent: '[修改前]测试多行省略测试多行多行省略' }, null)
+		),
 		document.getElementById('react-app')
 	);
 </script>

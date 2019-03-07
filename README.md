@@ -19,7 +19,7 @@ clipText('.test6', {line:2, animation: 100})
 | showTitle  |   boolean    |   false     |  add title              |
 | clipText   |    string    |   false     |  customize more text    |
 | clipClick  |   function   |   false     | click function          |
-| animation  |   boolean | number    |   false     | show animation          | 
+| animation  |   boolean | number    |   show animation frame by frame    | 
 
 ### example
 ![alt](https://c-rick.github.io/images/clip-text.png)
@@ -85,25 +85,25 @@ use clip-text with component in react
 
 // component
 class ClipText extends React.Component {
-  constructor(prop) {
-    super(prop)
+  constructor(props) {
+    super(props)
   }
   componentDidMount(e) {
     clipText(this.refs.clipRef, { line: 2 })
   }
   render() {
-    return (
-      <div class='text-box'>
-        <p>react使用</p>
-        <div class='test2'>[修改前]测试多行省略测试多行多行省略</div>
-        <div class='test2' ref='clipRef'>[修改前]测试多行省略测试多行多行省略</div>
-      </div>
-    )
+    return (<div class='test2' ref='clipRef'>{this.props.clipContent}</div>)
   }
 }
 // template
 ReactDOM.render(
-  <ClipText />,
+  (
+    <div class='text-box'>
+      <p>react使用</p>
+      <div class='test2'>[修改前]测试多行省略测试多行多行省略</div>
+      <ClipText clipContent="[修改前]测试多行省略测试多行多行省略" />
+    </div>
+  ),
   document.getElementById('root')
 );
 ```
