@@ -24,8 +24,8 @@ clipText('.test6', {line:2, animation: 100})
 ### example
 ![alt](https://c-rick.github.io/images/clip-text.png)
 ![alt](https://c-rick.github.io/images/clip-animation.gif)
-### how to use in anguular2+?
-use clip-text with directive
+### how to use in angular2+, vue or react?
+use clip-text with directive in angular2+
 ```
 <script src="./lib/clip-text.js"></script>
 
@@ -50,4 +50,60 @@ export class ClipTextDirective {
 }
 // template
 <P [appClipText]='{line:2}' >{{yourText}}</P>
+```
+use clip-text with directive in vue
+
+```
+<script src="./lib/clip-text.js"></script>
+
+// global directive
+Vue.directive('clip', {
+  inserted: function (el) {
+    clipText(el, { line: 2 })
+  }
+})
+// component
+new Vue({
+  el: '.vue-app',
+  data: {
+    text: '[修改前]测试多行省略测试多行多行省略',
+    title: 'vue使用'
+  }
+})
+// template
+<div class="vue-app text-box">
+  <p>{{title}}</p>
+  <div v-clip class="test2">{{text}}</div>
+</div>
+
+```
+
+use clip-text with component in react
+
+```
+<script src="./lib/clip-text.js"></script>
+
+// component
+class ClipText extends React.Component {
+  constructor(prop) {
+    super(prop)
+  }
+  componentDidMount(e) {
+    clipText(this.refs.clipRef, { line: 2 })
+  }
+  render() {
+    return (
+      <div class='text-box'>
+        <p>react使用</p>
+        <div class='test2'>[修改前]测试多行省略测试多行多行省略</div>
+        <div class='test2' ref='clipRef'>[修改前]测试多行省略测试多行多行省略</div>
+      </div>
+    )
+  }
+}
+// template
+ReactDOM.render(
+  <ClipText />,
+  document.getElementById('root')
+);
 ```

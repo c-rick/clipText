@@ -1,74 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <style>
-        .text-box{
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 30%;
-            box-sizing: border-box;
-            flex-wrap: wrap;
-            text-align: center;
-        }
-        .text-box p{
-            width: 100%;
-            text-align: center;
-            padding: 10px 0;
-        }
-        .text-box div{
-            display: inline-block;
-            border: 1px solid gray;
-            width: 30%;
-            box-sizing: border-box;
-            text-align: left;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		.text-box {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+			padding: 0 30%;
+			box-sizing: border-box;
+			flex-wrap: wrap;
+			text-align: center;
+		}
+
+		.text-box p {
+			width: 100%;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+		.text-box div {
+			display: inline-block;
+			border: 1px solid gray;
+			width: 30%;
+			box-sizing: border-box;
+			text-align: left;
+		}
+	</style>
 </head>
+
 <body>
-    <section class="text-box">
-        <p>1行(test1)</p> 
-        <div class="test">[修改前]测试单行省略</div>
-        <div class="test1">[修改后]测试单行省略</div>
-    </section>
-    <section class="text-box">
-        <p>多行溢出(test3)</p>
-        <div class="test2">[修改前]测试多行省略测试多行省略测试多行省略省略测试多行省略省略测试多行省略</div>
-        <div class="test3">[修改后]测试多行省略测试多行省略测试多行省略省略测试多行省略省略测试多行省略</div>
-    </section>
-    <section class="text-box">
-        <p>多行不溢出(test3)</p>
-        <div class="test2">[修改前]测试多行省略测试多行</div>
-        <div class="test3">[修改后]测试多行省略测试多行</div>
-    </section>
-    <section class="text-box">
-        <p>添加title(test4)</p>
-        <div class="test2">[修改前]测试多行省略测试多行多行省略</div>
-        <div class="test4">[修改前]测试多行省略测试多行多行省略</div>
-    </section>
-    <section class="text-box">
-        <p>自定义省略文字和点击事件(test5)</p>
-        <div class="test2">修改前测试省略省略as好ssd你你好呀</div>
-        <div class="test5">修改后测试省略省略as好ssd你你好呀</div>
-    </section>
-    <section class="text-box">
-        <p>添加动画(test6)</p>
-        <div class="test2">[修改前]测试多行省略测试多行多行省略</div>
-        <div class="test6">[修改前]测试多行省略测试多行多行省略</div>
-    </section>
-</body> 
-    <script src="./lib/clip-text.js"></script>
-    <script>
-        clipText(['.test1'])
-        clipText('.test3', {line:3})
-        clipText('.test4', {line:2, showTitle: true})
-        clipText('.test5', {line:2, clipText: '[更多]', clipClick: function(e){
-            console.log(e)
-        }})
-        clipText('.test6', {line:2, animation: 100})
-    </script>
+	<section class="text-box">
+		<p>1行(test1)</p>
+		<div class="test">[修改前]测试单行省略</div>
+		<div class="test1">[修改后]测试单行省略</div>
+	</section>
+	<section class="text-box">
+		<p>多行溢出(test3)</p>
+		<div class="test2">[修改前]测试多行省略测试多行省略测试多行省略省略测试多行省略省略测试多行省略</div>
+		<div class="test3">[修改后]测试多行省略测试多行省略测试多行省略省略测试多行省略省略测试多行省略</div>
+	</section>
+	<section class="text-box">
+		<p>多行不溢出(test3)</p>
+		<div class="test2">[修改前]测试多行省略测试多行</div>
+		<div class="test3">[修改后]测试多行省略测试多行</div>
+	</section>
+	<section class="text-box">
+		<p>添加title(test4)</p>
+		<div class="test2">[修改前]测试多行省略测试多行多行省略</div>
+		<div class="test4">[修改前]测试多行省略测试多行多行省略</div>
+	</section>
+	<section class="text-box">
+		<p>自定义省略文字和点击事件(test5)</p>
+		<div class="test2">修改前测试省略省略as好ssd你你好呀</div>
+		<div class="test5">修改后测试省略省略as好ssd你你好呀</div>
+	</section>
+	<section class="text-box">
+		<p>添加动画(test6)</p>
+		<div class="test2">[修改前]测试多行省略测试多行多行省略</div>
+		<div class="test6">[修改前]测试多行省略测试多行多行省略</div>
+	</section>
+	<div class="vue-app text-box">
+		<p>{{title}}</p>
+		<div class="test2">{{text}}</div>
+		<div v-clip class="test2">{{text}}</div>
+	</div>
+	<div id="react-app">
+	</div>
+</body>
+<script src="./lib/clip-text.js"></script>
+<script src="https://lib.baomitu.com/vue/2.6.8/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.4/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.4/umd/react-dom.production.min.js"></script>
+<script>
+	clipText(['.test1'])
+	clipText('.test3', { line: 3 })
+	clipText('.test4', { line: 2, showTitle: true })
+	clipText('.test5', {
+		line: 2, clipText: '[更多]', clipClick: function (e) {
+			console.log(e)
+		}
+	})
+	clipText('.test6', { line: 2, animation: 100 })
+	Vue.directive('clip', {
+		inserted: function (el) {
+			clipText(el, { line: 2 })
+		}
+	})
+	new Vue({
+		el: '.vue-app',
+		data: {
+			text: '[修改前]测试多行省略测试多行多行省略',
+			title: 'vue使用'
+		}
+	})
+	var rel = React.createElement;
+	class ClipText extends React.Component {
+		constructor(prop) {
+			super(prop)
+		}
+		componentDidMount(e) {
+			clipText(this.refs.clipRef, { line: 2 })
+		}
+		render() {
+			return rel('div', { className: 'text-box' }, '',
+				rel('p', null, 'react使用'),
+				rel('div', { className: 'test2' }, '[修改前]测试多行省略测试多行多行省略'),
+				rel('div', { ref: 'clipRef' }, '[修改前]测试多行省略测试多行多行省略')
+			)
+		}
+	}
+	ReactDOM.render(
+		rel(ClipText),
+		document.getElementById('react-app')
+	);
+</script>
+
 </html>
