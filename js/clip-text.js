@@ -71,24 +71,23 @@
 					}
 				})
 				// init resize
-				const resizeCB = () => {
-					cacheEl.forEach(i => {
-						this.clip(i.el, this.defalutOpt, i.orText);
-					})
-				}
-				if (!window.onresize) {
-					window.onresize = resizeCB;
-				} else {
-					const prevCB = window.onresize;
-					window.onresize = () => {
-						prevCB.call(window);
-						resizeCB.call(this);
+				const resizeCB = (delay) => {
+					let timeout = null;
+					let cb = () => {
+						cacheEl.forEach(i => {
+							this.clip(i.el, this.defalutOpt, i.orText);
+						})
+						timeout = null;
+					}
+					return () => {
+						if (timeout) return;
+						timeout = setTimeout(() => {
+							cb();
+						}, delay)
 					}
 				}
-				window.attachEvent && window.attachEvent('onresize', function() {
-					prevCB.call(window);
-					resizeCB.call(_this);
-				})
+				window.addEventListener &&	window.addEventListener('resize', resizeCB.call(this, 500))
+				window.attachEvent && window.attachEvent('onresize', resizeCB.call(this, 500))
 			},
 			clip($el, opt, orText) {
 				// for resize
@@ -141,7 +140,7 @@
 				const clipText = this.defalutOpt.clipText;
 				const otherText = clipText.match(regExpClip);
 				const clipLen = clipText.length;
-				const finalLen = otherText ? Math.ceil(otherText.length / 2) + (clipLen - otherText.length) : clipLen;
+				const finalLen = clipText === '...' ? 1 : otherText ? Math.ceil(otherText.length / 2) + (clipLen - otherText.length) : clipLen;
 				const reBackStr = str.split('').reverse().join("");
 				return [this.countExamine(reBackStr, finalLen), finalLen];
 			},
@@ -184,7 +183,8 @@
 					'overflow: hidden',
 					'display: -webkit-box',
 					'-webkit-box-orient: vertical',
-					`-webkit-line-clamp: ${this.defalutOpt.line}`
+					`-webkit-line-clamp: ${this.defalutOpt.line}`,
+					'text-align: left'
 				])
 			},
 			setAnimation($el, time = 60) {
